@@ -1,0 +1,79 @@
+<div class="container mt-3">
+  <div>
+    <div class="flex-row d-flex justify-content-start">
+      <div class="col-5">
+        <input id="name" type="text" [formControl]="search" (input)="filterProducts()" placeholder="Search product...">
+      </div>
+
+      <div class="d-inline-block col">
+        <div ngbDropdown class="d-inline-block mx-2">
+          <button type="button" class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle>
+            {{selectedSortItem}}
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let i of sortItems;">
+            <button (click)="sortProductsVolDesc()" ngbDropdownItem>{{sortItems[0]}}</button>
+            <button (click)="sortProductsVolAsc()" ngbDropdownItem>{{sortItems[1]}}</button>
+            <button (click)="sortProductsPriDesc()" ngbDropdownItem>{{sortItems[2]}}</button>
+            <button (click)="sortProductsPriAsc()" ngbDropdownItem>{{sortItems[3]}}</button>
+          </div>
+        </div>
+
+        <div ngbDropdown class="d-inline-block">
+          <button type="button" class="btn btn-primary" id="dropdownBasic2" ngbDropdownToggle>
+            {{ selectedSubCategory }}
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+            <button *ngFor="let subcategory of subcategories" ngbDropdownItem (click)="filterOnCategory(subcategory)">
+              {{ subcategory }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col px-2">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" [(ngModel)]="includeOutOfStock" (change)="checkBoxChange()" checked>
+          <label class="form-check-label" for="flexCheckDefault">
+            Include products out of stock
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-3">
+    <table class="table table-responsive w-100 table-striped">
+      <thead>
+        <tr> 
+          <th>ID</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Volume</th>
+          <th>In Stock</th> 
+          <th>Category</th>
+          <th>Subcategory</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="(products$ | async) as products; else loadingProducts">
+        <ng-container *ngIf="(categories$ | async) as categories">
+          <tr *ngFor="let product of products;">
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.extra['AGA'].PRI }}</td> 
+            <td>{{ product.extra['AGA'].VOL }}</td> 
+            <td>{{ checkIfInStock(product)}}</td> 
+            <td>{{ getCategoryName(product, categories)}}</td> 
+            <td>{{ getSubCategoryName(product, categories)}}</td> 
+          </tr>
+        </ng-container>
+      </tbody>
+      <ng-template #loadingProducts>
+        <tr>
+          <td colspan="6">Loading products...</td>
+        </tr>
+      </ng-template>
+    </table>
+  </div>
+</div>
+
+
