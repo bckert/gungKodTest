@@ -29,21 +29,13 @@ export class AppComponent {
 ngOnInit() {
   this.categories$.subscribe(
     (categories) => {
-      this.createSubCategoryList(categories, this.subcategories);
-    }
+      this.createSubCategoryList(categories, this.subcategories); }
   )
-
-
   this.productService.getAllProducts().subscribe(
     (products) => {
-      this.productsSubject.next(products);})
-   
+      this.productsSubject.next(products);}) 
   }
-
-
-  constructor(private productService: ProductService, private categoryService: CategoryService) {
-
-  } 
+  constructor(private productService: ProductService, private categoryService: CategoryService) { } 
 
   checkIfInStock(product: Product){
     if (product.extra['AGA'].LGA > 0)
@@ -91,13 +83,6 @@ getCategory(category: Category, product: Product): void {
   if (category.children && category.children.length > 0) {
     category.children.forEach(child => {
       this.getCategory(child, product);
-      // child.children.forEach(p=> {
-      //   if(!p.id.startsWith('s') && p.id === product.id){
-
-      //     console.log('Subcategory name: ' + child.name)
-      //     console.log('Product Name: ' + product.name)
-      //   }
-      // });
     });
   }
   
